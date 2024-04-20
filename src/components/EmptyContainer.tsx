@@ -8,7 +8,7 @@ import {
 
 import emptyTodoImg from './../assets/work-order.png'
 
-const EmptyTodo = () => {
+const EmptyContainer = () => {
   return (
     <Card className='max-w-3xl border-none'>
       <CardHeader className='text-center'>
@@ -18,10 +18,14 @@ const EmptyTodo = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className='space-y-3 flex justify-center items-center'>
-        <img className='w-1/2 h-1/2' src={emptyTodoImg} alt='Empty Todo' />
+        <img
+          className='w-1/2 h-1/2'
+          src={emptyTodoImg}
+          alt='Empty Todo'
+        />
       </CardContent>
     </Card>
   )
 }
 
-export default EmptyTodo
+export default EmptyContainer

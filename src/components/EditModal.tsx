@@ -1,4 +1,4 @@
-import { type ChangeEvent, useState } from 'react'
+import { useState } from 'react'
 import { Pencil } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -12,46 +12,33 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { cn } from '@/lib/utils'
+import { ToastTypes, todoToast } from '@/lib/utils'
 import { useAppDispatch } from '@/store/hooks'
 import { updateTodoItem } from '@/store/todo-slice'
 
 const EditModal = ({ id, name }: { id: string; name: string }) => {
   const [editTodoInput, setEditTodoInput] = useState('')
-  const [error, setError] = useState(false)
-  const [open, setOpen] = useState(true)
 
   const dispatch = useAppDispatch()
 
-  const clearHandler = () => {
-    setEditTodoInput('')
-  }
-
-  const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value.trim().length === 0) {
-      setOpen(false)
-      return
-    }
-
-    setEditTodoInput(event.target.value)
-  }
-
-  const blurHandler = () => {
-    if (editTodoInput.trim().length !== 0) {
-      setError(false)
-      return
-    }
-  }
+  const hasError = editTodoInput.trim().length === 0
 
   const updateTodoHandler = () => {
-    if (editTodoInput.trim().length === 0) {
-      setError(true)
+    if (editTodoInput === name) {
+      todoToast('You have inputed the same input', ToastTypes.INFO)
       return
     }
 
-    dispatch(updateTodoItem({ id, name: editTodoInput }))
+    if (hasError) {
+      todoToast('Input should not be empty.', ToastTypes.WARNING)
+      return
+    }
 
-    clearHandler()
+    dispatch(updateTodoItem({ id, name: editTodoInput.trim() }))
+
+    todoToast('A todo item have updated successfully.')
+
+    setEditTodoInput('')
   }
 
   return (
@@ -71,29 +58,20 @@ const EditModal = ({ id, name }: { id: string; name: string }) => {
             placeholder='edit todo item'
             defaultValue={name}
             // value={editTodoInput}
-            onChange={changeHandler}
-            onBlur={blurHandler}
-            className={cn('text-md font-normal col-span-3', {
-              'bg-red-100 outline outline-offset-2 outline-red-400 focus:bg-transparent':
-                error,
-            })}
+            onChange={(event) => setEditTodoInput(event.target.value)}
+            onFocus={(event) => setEditTodoInput(event?.target.value)}
+            className={'text-md font-normal col-span-3'}
           />
         </div>
         <DialogFooter>
-          {/* {error ? (
-            <Button type='submit' onClick={updateTodoHandler}>
+          <DialogClose asChild>
+            <Button
+              type='submit'
+              onClick={updateTodoHandler}
+            >
               Update Todo
             </Button>
-          ) : (
-            <DialogClose asChild>
-              <Button type='submit' onClick={updateTodoHandler}>
-                Update Todo
-              </Button>
-            </DialogClose>
-          )} */}
-          <Button type='submit' onClick={updateTodoHandler}>
-            Update Todo
-          </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

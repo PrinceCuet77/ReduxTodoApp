@@ -12,21 +12,21 @@ type todoState = {
 
 const initialState: todoState = {
   todos: [
-    {
-      id: '1',
-      name: 'Go to office',
-      isEditted: false,
-    },
-    {
-      id: '2',
-      name: 'Asset integration task',
-      isEditted: false,
-    },
-    {
-      id: '3',
-      name: 'Animation integration on WintosJR avatar',
-      isEditted: false,
-    },
+    // {
+    //   id: '1',
+    //   name: 'Go to office',
+    //   isEditted: false,
+    // },
+    // {
+    //   id: '2',
+    //   name: 'Asset integration task',
+    //   isEditted: false,
+    // },
+    // {
+    //   id: '3',
+    //   name: 'Animation integration on WintosJR avatar',
+    //   isEditted: false,
+    // },
   ],
 }
 

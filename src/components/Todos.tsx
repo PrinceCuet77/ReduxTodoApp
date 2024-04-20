@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 import Todo from './Todo'
 import { useAppSelector } from '@/store/hooks'
-import EmptyTodo from './EmptyTodo'
+import EmptyTodo from './EmptyContainer'
 
 const Todos = () => {
   const todoItem = useAppSelector((state) => state.todo.todos)

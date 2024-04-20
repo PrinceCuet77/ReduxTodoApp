@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export enum ToastAllTypes {
+export enum ToastTypes {
   SUCCESS,
   INFO,
   WARNING,
@@ -15,11 +15,12 @@ export enum ToastAllTypes {
 }
 
 type ToastType =
-  | ToastAllTypes.SUCCESS
-  | ToastAllTypes.INFO
-  | ToastAllTypes.WARNING
-  | ToastAllTypes.ERROR
-  | ToastAllTypes.DEFAULT
+  | ToastTypes.SUCCESS
+  | ToastTypes.INFO
+  | ToastTypes.WARNING
+  | ToastTypes.ERROR
+  | ToastTypes.DEFAULT
+
 type ToastObjType = {
   position: ToastPosition | undefined
   autoClose: number
@@ -32,7 +33,7 @@ type ToastObjType = {
 
 export function todoToast(
   toastMessage: string,
-  type: ToastType = ToastAllTypes.SUCCESS
+  type: ToastType = ToastTypes.SUCCESS
 ) {
   const toastObj: ToastObjType = {
     position: 'bottom-center',
@@ -44,13 +45,13 @@ export function todoToast(
     theme: 'colored',
   }
 
-  if (type === ToastAllTypes.SUCCESS) {
+  if (type === ToastTypes.SUCCESS) {
     toast.success(toastMessage, toastObj)
-  } else if (type === ToastAllTypes.INFO) {
+  } else if (type === ToastTypes.INFO) {
     toast.info(toastMessage, toastObj)
-  } else if (type === ToastAllTypes.WARNING) {
+  } else if (type === ToastTypes.WARNING) {
     toast.warning(toastMessage, toastObj)
-  } else if (type === ToastAllTypes.ERROR) {
+  } else if (type === ToastTypes.ERROR) {
     toast.error(toastMessage, toastObj)
   } else {
     toast(toastMessage, toastObj)

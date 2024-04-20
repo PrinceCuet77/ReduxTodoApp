@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ToastContainer } from 'react-toastify'
+// import { Loader2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
@@ -8,8 +8,6 @@ import { cn, todoToast } from '@/lib/utils'
 import { useAppDispatch } from '@/store/hooks'
 import { AddTodoItem } from '@/store/todo-slice'
 import TodoFormHeader from './TodoFormHeader'
-
-import 'react-toastify/dist/ReactToastify.css'
 
 const TodoForm = () => {
   const [todoInput, setTodoInput] = useState('')
@@ -26,7 +24,7 @@ const TodoForm = () => {
     dispatch(
       AddTodoItem({
         id: Math.random().toString(),
-        name: todoInput,
+        name: todoInput.trim(),
         isEditted: false,
       })
     )
@@ -36,15 +34,8 @@ const TodoForm = () => {
     setTodoInput('')
   }
 
-  const blurHandler = () => {
-    if (todoInput.trim().length !== 0) {
-      setError(false)
-    }
-  }
-
   return (
     <>
-      <ToastContainer className='w-[380px]' />
       <Card className='max-w-3xl border-blue-600 mb-5'>
         <TodoFormHeader />
         <CardContent>
@@ -55,7 +46,6 @@ const TodoForm = () => {
                 placeholder='List anything...'
                 value={todoInput}
                 onChange={(event) => setTodoInput(event.target.value)}
-                onBlur={blurHandler}
                 onFocus={() => setError(false)}
                 className={cn('text-md font-normal', {
                   'bg-red-100 outline outline-offset-2 outline-red-400 focus:bg-transparent':
@@ -64,7 +54,7 @@ const TodoForm = () => {
               />
               {error && (
                 <p className='text-red-500 text-sm'>
-                  Input should not be an empty.
+                  Input should not be empty.
                 </p>
               )}
             </div>
@@ -77,7 +67,14 @@ const TodoForm = () => {
           >
             Clear
           </Button>
-          <Button onClick={addTodoHandler}>Add Todo</Button>
+          <Button
+            className='w-24'
+            onClick={addTodoHandler}
+            // disabled
+          >
+            Add Todo
+            {/* <Loader2 className='text-center h-6 w-6 animate-spin' /> */}
+          </Button>
         </CardFooter>
       </Card>
     </>
