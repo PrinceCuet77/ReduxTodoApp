@@ -5,10 +5,9 @@ import { TodoItem } from './todo-slice'
 export const todoAPI = {
   getTodo: async () => {
     const response = await axios.get(config.BASE_URL)
-    console.log('Response -> fetchTodoList: ', response)
     return response.data
   },
-  postTodo: async (todo: TodoItem) => { // OK
+  postTodo: async (todo: TodoItem) => {
     const response = await axios.post(config.BASE_URL, todo)
     return response.config.data
   },

@@ -11,12 +11,14 @@ type todoState = {
   todos: TodoItem[]
   isLoading: 'idle' | 'pending' | 'succeeded' | 'failed'
   error: null | string
+  // toastMessage: null | string
 }
 
 const initialState: todoState = {
   todos: [],
   isLoading: 'idle',
   error: null,
+  // toastMessage: null,
 }
 
 export const todoSlice = createSlice({
@@ -27,36 +29,29 @@ export const todoSlice = createSlice({
     builder
       .addCase(getTodo.pending, (state) => {
         state.isLoading = 'pending'
-        state.error = null
       })
       .addCase(getTodo.fulfilled, (state, action) => {
         state.isLoading = 'succeeded'
-        state.todos.push(action.payload)
-        state.error = null
+
+        if (!action.payload) {
+          state.todos = []
+        } else {
+          const firebaseEntries: [string, TodoItem][] = Object.entries(
+            action.payload
+          )
+          for (let i = 0; i < firebaseEntries.length; i++) {
+            state.todos.push(firebaseEntries[i][1])
+          }
+        }
       })
       .addCase(getTodo.rejected, (state, action) => {
         state.isLoading = 'failed'
         state.error = action.error?.message || 'Something went wrong'
       })
 
-    builder
-      .addCase(postTodo.pending, (state) => {
-        state.isLoading = 'pending'
-        console.log('Pending...')
-        state.error = null
-      })
-      .addCase(postTodo.fulfilled, (state, action) => {
-        state.isLoading = 'succeeded'
-        state.todos.push(JSON.parse(action.payload))
-        // console.log('Action-> postTodo -> ff: ', action.payload)
-        state.error = null
-      })
-      .addCase(postTodo.rejected, (state, action) => {
-        state.isLoading = 'failed'
-        // console.log('Action failed-> postTodo -> ff: ', action.error)
-        state.error = action.error?.message || 'Something went wrong'
-        // console.log(state.error)
-      })
+    builder.addCase(postTodo.fulfilled, (state, action) => {
+      state.todos.push(JSON.parse(action.payload))
+    })
 
     builder
       .addCase(updateTodo.pending, (state) => {

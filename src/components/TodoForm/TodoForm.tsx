@@ -5,24 +5,18 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { ToastTypes, cn, todoToast } from '@/lib/utils'
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { useAppDispatch } from '@/store/hooks'
 import TodoFormHeader from './TodoFormHeader'
 import { postTodo } from '@/store/todo/todo-thunks'
 
 const TodoForm = () => {
   const [todoInput, setTodoInput] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(false)
 
-  const dispatch = useAppDispatch()
-  const { isLoading, error: fetchingError } = useAppSelector(
-    (state) => state.todo
-  )
+  // console.log('loading>>>>>>>>>>>', isLoading)
 
-  if (isLoading === 'failed') {
-    todoToast(fetchingError ?? 'Something went wrong', ToastTypes.ERROR)
-  } else if (isLoading === 'succeeded') {
-    todoToast('A new todo item have successfully added.')
-  }
+  const dispatch = useAppDispatch()
 
   const addTodoHandler = () => {
     if (todoInput.trim().length === 0) {
@@ -30,15 +24,24 @@ const TodoForm = () => {
       return
     }
 
-    dispatch(
-      postTodo({
-        id: Math.random().toString(),
-        name: todoInput.trim(),
-        isEditted: false,
-      })
-    )
+    try {
+      setIsLoading(true)
+      dispatch(
+        postTodo({
+          id: Math.random().toString(),
+          name: todoInput.trim(),
+          isEditted: false,
+        })
+      ).unwrap()
 
-    setTodoInput('')
+      setTodoInput('')
+    } catch (err) {
+      console.error('Failed to save the todo', err)
+      todoToast('Failed to save the todo', ToastTypes.ERROR)
+    }
+
+    todoToast('A new todo item have successfully added.')
+    setIsLoading(false)
   }
 
   return (
@@ -77,9 +80,9 @@ const TodoForm = () => {
           <Button
             className='w-24'
             onClick={addTodoHandler}
-            disabled={isLoading === 'pending'}
+            disabled={isLoading}
           >
-            {isLoading === 'pending' ? (
+            {isLoading ? (
               <Loader2 className='text-center h-6 w-6 animate-spin' />
             ) : (
               'Add Todo'
