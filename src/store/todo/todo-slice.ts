@@ -1,4 +1,4 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import { getTodo, postTodo, updateTodo, deleteTodo } from './todo-thunks'
 
 export type TodoItem = {
@@ -11,14 +11,12 @@ type todoState = {
   todos: TodoItem[]
   isLoading: 'idle' | 'pending' | 'succeeded' | 'failed'
   error: null | string
-  // toastMessage: null | string
 }
 
 const initialState: todoState = {
   todos: [],
   isLoading: 'idle',
   error: null,
-  // toastMessage: null,
 }
 
 export const todoSlice = createSlice({
@@ -36,12 +34,11 @@ export const todoSlice = createSlice({
         if (!action.payload) {
           state.todos = []
         } else {
-          const firebaseEntries: [string, TodoItem][] = Object.entries(
-            action.payload
-          )
-          for (let i = 0; i < firebaseEntries.length; i++) {
-            state.todos.push(firebaseEntries[i][1])
+          let fetchedTodo: TodoItem[] = []
+          for (let key in action.payload) {
+            fetchedTodo.push({ ...action.payload[key], id: key })
           }
+          state.todos = [...fetchedTodo]
         }
       })
       .addCase(getTodo.rejected, (state, action) => {
@@ -50,39 +47,27 @@ export const todoSlice = createSlice({
       })
 
     builder.addCase(postTodo.fulfilled, (state, action) => {
-      state.todos.push(JSON.parse(action.payload))
+      const newTodo = {
+        id: action.payload.response.data.name,
+        ...action.payload.data,
+      }
+      state.todos.unshift(newTodo)
     })
 
-    builder
-      .addCase(updateTodo.pending, (state) => {
-        state.isLoading = 'pending'
-        state.error = null
-      })
-      .addCase(updateTodo.fulfilled, (state, action) => {
-        state.isLoading = 'succeeded'
-        // state.todos.push(action.payload)
-        console.log('Action-> updateTodo -> ff: ', action)
-        state.error = null
-      })
-      .addCase(updateTodo.rejected, (state, action) => {
-        state.isLoading = 'failed'
-        state.error = action.error?.message || 'Something went wrong'
-      })
+    builder.addCase(updateTodo.fulfilled, (state, action) => {
+      const index = state.todos.findIndex(
+        (todo) => todo.id === action.payload.id
+      )
 
-    builder
-      .addCase(deleteTodo.pending, (state) => {
-        state.isLoading = 'pending'
-        state.error = null
-      })
-      .addCase(deleteTodo.fulfilled, (state, action) => {
-        state.isLoading = 'succeeded'
-        // state.todos.push(action.payload)
-        console.log('Action-> deleteTodo -> ff: ', action)
-        state.error = null
-      })
-      .addCase(deleteTodo.rejected, (state, action) => {
-        state.isLoading = 'failed'
-        state.error = action.error?.message || 'Something went wrong'
-      })
+      state.todos[index] = {
+        id: action.payload.id,
+        ...action.payload.response.data,
+      }
+    })
+
+    builder.addCase(deleteTodo.fulfilled, (state, action) => {
+      const newTodos = state.todos.filter((todo) => todo.id !== action.meta.arg)
+      state.todos = newTodos
+    })
   },
 })

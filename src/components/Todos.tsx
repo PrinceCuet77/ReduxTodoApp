@@ -8,6 +8,8 @@ import Loader from './Loader/Loader'
 const Todos = () => {
   const { todos, isLoading } = useAppSelector((state) => state.todo)
 
+  // console.log(todos)
+
   if (isLoading === 'pending') {
     return <Loader />
   }
