@@ -42,17 +42,20 @@ export const todoSlice = createSlice({
     builder
       .addCase(postTodo.pending, (state) => {
         state.isLoading = 'pending'
+        console.log('Pending...')
         state.error = null
       })
       .addCase(postTodo.fulfilled, (state, action) => {
         state.isLoading = 'succeeded'
-        // state.todos.push(action.payload)
-        console.log('Action-> postTodo -> ff: ', action)
+        state.todos.push(JSON.parse(action.payload))
+        // console.log('Action-> postTodo -> ff: ', action.payload)
         state.error = null
       })
       .addCase(postTodo.rejected, (state, action) => {
         state.isLoading = 'failed'
+        // console.log('Action failed-> postTodo -> ff: ', action.error)
         state.error = action.error?.message || 'Something went wrong'
+        // console.log(state.error)
       })
 
     builder

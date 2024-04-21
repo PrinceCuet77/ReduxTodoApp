@@ -1,19 +1,28 @@
 import { useState } from 'react'
-// import { Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { cn, todoToast } from '@/lib/utils'
-import { useAppDispatch } from '@/store/hooks'
-import { AddTodoItem } from '@/store/todo-slice'
+import { ToastTypes, cn, todoToast } from '@/lib/utils'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import TodoFormHeader from './TodoFormHeader'
+import { postTodo } from '@/store/todo/todo-thunks'
 
 const TodoForm = () => {
   const [todoInput, setTodoInput] = useState('')
   const [error, setError] = useState(false)
 
   const dispatch = useAppDispatch()
+  const { isLoading, error: fetchingError } = useAppSelector(
+    (state) => state.todo
+  )
+
+  if (isLoading === 'failed') {
+    todoToast(fetchingError ?? 'Something went wrong', ToastTypes.ERROR)
+  } else if (isLoading === 'succeeded') {
+    todoToast('A new todo item have successfully added.')
+  }
 
   const addTodoHandler = () => {
     if (todoInput.trim().length === 0) {
@@ -22,14 +31,12 @@ const TodoForm = () => {
     }
 
     dispatch(
-      AddTodoItem({
+      postTodo({
         id: Math.random().toString(),
         name: todoInput.trim(),
         isEditted: false,
       })
     )
-
-    todoToast('A new todo item have successfully added.')
 
     setTodoInput('')
   }
@@ -70,10 +77,13 @@ const TodoForm = () => {
           <Button
             className='w-24'
             onClick={addTodoHandler}
-            // disabled
+            disabled={isLoading === 'pending'}
           >
-            Add Todo
-            {/* <Loader2 className='text-center h-6 w-6 animate-spin' /> */}
+            {isLoading === 'pending' ? (
+              <Loader2 className='text-center h-6 w-6 animate-spin' />
+            ) : (
+              'Add Todo'
+            )}
           </Button>
         </CardFooter>
       </Card>

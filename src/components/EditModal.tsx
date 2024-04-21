@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { ToastTypes, todoToast } from '@/lib/utils'
 import { useAppDispatch } from '@/store/hooks'
-import { updateTodoItem } from '@/store/todo-slice'
+// import { updateTodoItem } from '@/store/todo-slice'
 
 const EditModal = ({ id, name }: { id: string; name: string }) => {
   const [editTodoInput, setEditTodoInput] = useState('')
@@ -34,7 +34,7 @@ const EditModal = ({ id, name }: { id: string; name: string }) => {
       return
     }
 
-    dispatch(updateTodoItem({ id, name: editTodoInput.trim() }))
+    // dispatch(updateTodoItem({ id, name: editTodoInput.trim() }))
 
     todoToast('A todo item have updated successfully.')
 

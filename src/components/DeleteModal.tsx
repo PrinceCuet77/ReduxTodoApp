@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { useAppDispatch } from '@/store/hooks'
-import { removeTodoItem } from '@/store/todo-slice'
+// import { removeTodoItem } from '@/store/todo-slice'
 import { ToastTypes, todoToast } from '@/lib/utils'
 
 type DeleteModalProps = { id: string }
@@ -22,7 +22,7 @@ const DeleteModal = ({ id }: DeleteModalProps) => {
   const dispatch = useAppDispatch()
 
   const deleteHandler = () => {
-    dispatch(removeTodoItem(id))
+    // dispatch(removeTodoItem(id))
 
     todoToast('A todo item have successfully deleted.', ToastTypes.INFO)
   }

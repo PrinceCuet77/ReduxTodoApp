@@ -8,10 +8,9 @@ export const todoAPI = {
     console.log('Response -> fetchTodoList: ', response)
     return response.data
   },
-  postTodo: async (todo: TodoItem) => {
+  postTodo: async (todo: TodoItem) => { // OK
     const response = await axios.post(config.BASE_URL, todo)
-    console.log('Response -> postTodo', response)
-    return response
+    return response.config.data
   },
   updateTodo: async (todo: TodoItem) => {
     const { id } = todo
