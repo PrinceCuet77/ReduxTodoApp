@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+
 import { getTodo, postTodo, updateTodo, deleteTodo } from './todo-thunks'
 
 export type TodoItem = {
@@ -47,10 +48,12 @@ export const todoSlice = createSlice({
       })
 
       .addCase(postTodo.fulfilled, (state, action) => {
-        const id = action.payload.response.data.name
+        const data = JSON.parse(action.payload.config.data)
+
+        const id: string = action.payload.data.name
         const newTodo = {
           id,
-          ...action.payload.data,
+          ...data,
         }
         state.todos.unshift(newTodo)
       })
@@ -62,7 +65,7 @@ export const todoSlice = createSlice({
 
         state.todos[index] = {
           id: action.payload.id,
-          ...action.payload.response.data,
+          ...action.payload.data,
         }
       })
 

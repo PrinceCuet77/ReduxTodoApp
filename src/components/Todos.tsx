@@ -1,12 +1,28 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { useEffect } from 'react'
 
 import Todo from './Todo'
-import { useAppSelector } from '@/store/hooks'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import EmptyTodo from './EmptyContainer'
 import Loader from './Loader/Loader'
+import { getTodo } from '@/store/todo/todo-thunks'
 
 const Todos = () => {
   const { todos, isLoading, error } = useAppSelector((state) => state.todo)
+
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    const fetchedTodo = async () => {
+      try {
+        await dispatch(getTodo()).unwrap()
+      } catch (err) {
+        console.log('error: ', err)
+      }
+    }
+
+    fetchedTodo()
+  }, [dispatch])
 
   if (isLoading === 'pending') {
     return <Loader />

@@ -1,30 +1,26 @@
 import axios from 'axios'
+
 import { config } from '../../lib/config'
 import { TodoItem } from './todo-slice'
 
 export const todoAPI = {
-  getTodo: async () => {
-    const response = await axios.get(config.BASE_URL + config.DB + '.json')
-    return response.data
+  getTodo: () => {
+    return axios.get(config.BASE_URL + config.DB + '.json')
   },
-  postTodo: async (todo: TodoItem) => {
+  postTodo: (todo: TodoItem) => {
     const data = { name: todo.name, isEditted: todo.isEditted }
     const url = `${config.BASE_URL}${config.DB}.json`
 
-    const response = await axios.post(url, data)
-    delete response.data.headers
-    return { response, data }
+    return axios.post(url, data)
   },
-  updateTodo: async (todo: TodoItem) => {
+  updateTodo: (todo: TodoItem) => {
     const url = `${config.BASE_URL}/${config.DB}/${todo.id}.json`
     const data = { name: todo.name, isEditted: todo.isEditted }
 
-    const response = await axios.put(url, data)
-    return { response, id: todo.id }
+    return axios.put(url, data)
   },
-  deleteTodo: async (id: string) => {
+  deleteTodo: (id: string) => {
     const url = `${config.BASE_URL}/${config.DB}/${id}.json`
-    const response = await axios.delete(url)
-    return { response, id }
+    return axios.delete(url)
   },
 }

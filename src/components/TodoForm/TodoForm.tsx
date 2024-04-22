@@ -25,7 +25,7 @@ const TodoForm = () => {
     }
 
     if (todos.length === 5) {
-      todoToast('Please finish existing todo task first.', ToastTypes.INFO)
+      todoToast('You can enlist atmost 5 todo tasks.', ToastTypes.INFO)
       setTodoInput('')
       setIsLoading(false)
       return
