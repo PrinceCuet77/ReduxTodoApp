@@ -14,11 +14,9 @@ const TodoForm = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(false)
 
-  // console.log('loading>>>>>>>>>>>', isLoading)
-
   const dispatch = useAppDispatch()
 
-  const addTodoHandler = () => {
+  const addTodoHandler = async () => {
     if (todoInput.trim().length === 0) {
       setError(true)
       return
@@ -26,7 +24,7 @@ const TodoForm = () => {
 
     try {
       setIsLoading(true)
-      dispatch(
+      await dispatch(
         postTodo({
           id: Math.random().toString(),
           name: todoInput.trim(),
@@ -34,13 +32,13 @@ const TodoForm = () => {
         })
       ).unwrap()
 
-      setTodoInput('')
+      todoToast('A new todo item have successfully added.')
     } catch (err) {
       console.error('Failed to save the todo', err)
       todoToast('Failed to save the todo', ToastTypes.ERROR)
     }
-
-    todoToast('A new todo item have successfully added.')
+    
+    setTodoInput('')
     setIsLoading(false)
   }
 
@@ -71,10 +69,7 @@ const TodoForm = () => {
           </div>
         </CardContent>
         <CardFooter className='flex justify-end gap-3'>
-          <Button
-            onClick={() => setTodoInput('')}
-            variant='outline'
-          >
+          <Button onClick={() => setTodoInput('')} variant='outline'>
             Clear
           </Button>
           <Button

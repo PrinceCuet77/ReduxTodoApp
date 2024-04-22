@@ -46,28 +46,33 @@ export const todoSlice = createSlice({
         state.error = action.error?.message || 'Something went wrong'
       })
 
-    builder.addCase(postTodo.fulfilled, (state, action) => {
-      const newTodo = {
-        id: action.payload.response.data.name,
-        ...action.payload.data,
-      }
-      state.todos.unshift(newTodo)
-    })
+      .addCase(postTodo.fulfilled, (state, action) => {
+        const id = action.payload.response.data.name
+        const newTodo = {
+          id,
+          ...action.payload.data,
+        }
+        state.todos.unshift(newTodo)
 
-    builder.addCase(updateTodo.fulfilled, (state, action) => {
-      const index = state.todos.findIndex(
-        (todo) => todo.id === action.payload.id
-      )
+        // state.todos.unshift(action.payload.todo)
+      })
 
-      state.todos[index] = {
-        id: action.payload.id,
-        ...action.payload.response.data,
-      }
-    })
+      .addCase(updateTodo.fulfilled, (state, action) => {
+        const index = state.todos.findIndex(
+          (todo) => todo.id === action.payload.id
+        )
 
-    builder.addCase(deleteTodo.fulfilled, (state, action) => {
-      const newTodos = state.todos.filter((todo) => todo.id !== action.meta.arg)
-      state.todos = newTodos
-    })
+        state.todos[index] = {
+          id: action.payload.id,
+          ...action.payload.response.data,
+        }
+      })
+
+      .addCase(deleteTodo.fulfilled, (state, action) => {
+        const newTodos = state.todos.filter(
+          (todo) => todo.id !== action.payload.id
+        )
+        state.todos = newTodos
+      })
   },
 })

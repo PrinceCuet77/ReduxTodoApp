@@ -9,11 +9,21 @@ export const todoAPI = {
   },
   postTodo: async (todo: TodoItem) => {
     const data = { name: todo.name, isEditted: todo.isEditted }
-    const response = await axios.post(
-      config.BASE_URL + config.DB + '.json',
-      data
-    )
-    return { response, data }
+    const url = `${config.BASE_URL}${config.DB}.json`
+
+    const response = await axios.post(url, data)
+    return { response, data } 
+
+    // const response = await fetch(url, {
+    //   method: 'POST',
+    //   body: JSON.stringify(data),
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    // })
+
+    // const res = await response.json()
+    // return { response: res, todo }
   },
   updateTodo: async (todo: TodoItem) => {
     const url = `${config.BASE_URL}/${config.DB}/${todo.id}.json`
@@ -26,6 +36,6 @@ export const todoAPI = {
   deleteTodo: async (id: string) => {
     const url = `${config.BASE_URL}/${config.DB}/${id}.json`
     const response = await axios.delete(url)
-    return response
+    return { response, id }
   },
 }

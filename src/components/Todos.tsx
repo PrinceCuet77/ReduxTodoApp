@@ -6,7 +6,7 @@ import EmptyTodo from './EmptyContainer'
 import Loader from './Loader/Loader'
 
 const Todos = () => {
-  const { todos, isLoading } = useAppSelector((state) => state.todo)
+  const { todos, isLoading, error } = useAppSelector((state) => state.todo)
 
   // console.log(todos)
 
@@ -14,11 +14,11 @@ const Todos = () => {
     return <Loader />
   }
 
-  if (isLoading === 'failed') {
-    // todoToast(fetchingError ?? 'Something went wrong', ToastTypes.ERROR)
-    // TODO: Need a error component to load while facing an error
-    return <p>Error----------------------------------</p>
-  }
+  // if (isLoading === 'failed') {
+  //   // todoToast(fetchingError ?? 'Something went wrong', ToastTypes.ERROR)
+  //   // TODO: Need a error component to load while facing an error
+  //   return <p>Error----------------------------------</p>
+  // }
 
   if (todos.length !== 0) {
     return (
@@ -38,7 +38,7 @@ const Todos = () => {
     )
   }
 
-  return <EmptyTodo />
+  return <EmptyTodo error={error} />
 }
 
 export default Todos
