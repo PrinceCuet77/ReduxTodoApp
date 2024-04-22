@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils'
 
 import DeleteModal from './DeleteModal'
 import EditModal from './EditModal'
-import { TodoItem } from '@/store/todo-slice'
+import { Todo as TodoItem } from '@/store/todo-slice'
 
 const Todo = ({ id, name, isEditted }: TodoItem) => {
   return (

@@ -1,57 +1,54 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { config } from '@/lib/config'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-export type TodoItem = {
+export type Todo = {
   id: string
   name: string
   isEditted: boolean
 }
 
-type todoState = {
-  todos: TodoItem[]
-}
-
-const initialState: todoState = {
-  todos: [
-    // {
-    //   id: '1',
-    //   name: 'Go to office',
-    //   isEditted: false,
-    // },
-    // {
-    //   id: '2',
-    //   name: 'Asset integration task',
-    //   isEditted: false,
-    // },
-    // {
-    //   id: '3',
-    //   name: 'Animation integration on WintosJR avatar',
-    //   isEditted: false,
-    // },
-  ],
-}
-
-export const todoSlice = createSlice({
-  name: 'todo',
-  initialState,
-  reducers: {
-    AddTodoItem(state, action: PayloadAction<TodoItem>) {
-      state.todos.unshift(action.payload)
-    },
-    removeTodoItem(state, action: PayloadAction<string>) {
-      const todoIndex = state.todos.findIndex(
-        (todo) => todo.id === action.payload
-      )
-      state.todos.splice(todoIndex, 1)
-    },
-    updateTodoItem(state, action: PayloadAction<{ id: string; name: string }>) {
-      const todoIndex = state.todos.findIndex(
-        (todo) => todo.id === action.payload.id
-      )
-
-      state.todos[todoIndex].name = action.payload.name
-      state.todos[todoIndex].isEditted = true
-    },
-  },
+export const todoApi = createApi({
+  reducerPath: 'todoApi',
+  baseQuery: fetchBaseQuery({ baseUrl: config.BASE_URL }),
+  tagTypes: ['Todo'],
+  endpoints: (builder) => ({
+    getTodos: builder.query<Todo[], void>({
+      query: () => `${config.DB}.json`,
+      providesTags: () => [{ type: 'Todo', id: 'List' }],
+    }),
+    addTodo: builder.mutation<Todo, { name: string; isEditted: boolean }>({
+      query: ({ name, isEditted }) => ({
+        url: `${config.DB}.json`,
+        method: 'POST',
+        body: { name, isEditted },
+      }),
+      invalidatesTags: (result) => ['Todo', { type: 'Todo', id: result?.name }],
+    }),
+    updateTodo: builder.mutation<{ name: string; isEditted: boolean }, Todo>({
+      query: ({ id, name, isEditted }) => {
+        return {
+          url: `${config.DB}/${id}.jon`,
+          method: 'PUT',
+          body: { name, isEditted },
+        }
+      },
+      invalidatesTags: (result) => ['Todo', { type: 'Todo', id: result?.name }],
+    }),
+    deleteTodo: builder.mutation<{ name: string; isEditted: boolean }, string>({
+      query(id) {
+        return {
+          url: `${config.DB}/${id}.json`,
+          method: 'DELETE',
+        }
+      },
+      invalidatesTags: (result) => ['Todo', { type: 'Todo', id: result?.name }],
+    }),
+  }),
 })
 
-export const { AddTodoItem, removeTodoItem, updateTodoItem } = todoSlice.actions
+export const {
+  useGetTodosQuery,
+  useAddTodoMutation,
+  useUpdateTodoMutation,
+  useDeleteTodoMutation,
+} = todoApi

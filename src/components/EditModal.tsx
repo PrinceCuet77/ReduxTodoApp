@@ -13,19 +13,18 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { ToastTypes, todoToast } from '@/lib/utils'
-import { useAppDispatch } from '@/store/hooks'
-import { updateTodoItem } from '@/store/todo-slice'
+import { useUpdateTodoMutation } from '@/store/todo-slice'
 
 const EditModal = ({ id, name }: { id: string; name: string }) => {
   const [editTodoInput, setEditTodoInput] = useState('')
 
-  const dispatch = useAppDispatch()
+  const [updateTodo] = useUpdateTodoMutation()
 
   const hasError = editTodoInput.trim().length === 0
 
-  const updateTodoHandler = () => {
+  const updateTodoHandler = async () => {
     if (editTodoInput === name) {
-      todoToast('You have inputed the same input', ToastTypes.INFO)
+      todoToast('You have inputed the same input', ToastTypes.WARNING)
       return
     }
 
@@ -34,11 +33,20 @@ const EditModal = ({ id, name }: { id: string; name: string }) => {
       return
     }
 
-    dispatch(updateTodoItem({ id, name: editTodoInput.trim() }))
+    try {
+      await updateTodo({
+        id,
+        name: editTodoInput,
+        isEditted: true,
+      }).unwrap()
 
-    todoToast('A todo item have updated successfully.')
+      todoToast('A todo item have updated successfully.')
 
-    setEditTodoInput('')
+      setEditTodoInput('')
+    } catch (err) {
+      // console.error('Failed to update the todo', err)
+      todoToast('Failed to update the todo', ToastTypes.ERROR)
+    }
   }
 
   return (

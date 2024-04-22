@@ -1,35 +1,52 @@
 import { useState } from 'react'
-// import { Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { cn, todoToast } from '@/lib/utils'
-import { useAppDispatch } from '@/store/hooks'
-import { AddTodoItem } from '@/store/todo-slice'
+import { ToastTypes, cn, todoToast } from '@/lib/utils'
+import { Todo, useAddTodoMutation, useGetTodosQuery } from '@/store/todo-slice'
 import TodoFormHeader from './TodoFormHeader'
 
 const TodoForm = () => {
   const [todoInput, setTodoInput] = useState('')
   const [error, setError] = useState(false)
 
-  const dispatch = useAppDispatch()
+  const [addTodo, { isLoading }] = useAddTodoMutation()
+  const { data: todos } = useGetTodosQuery()
 
-  const addTodoHandler = () => {
+  let fetchedTodo: Todo[] = []
+  for (let key in todos) {
+    fetchedTodo.unshift({ ...todos[key], id: key })
+  }
+
+  const addTodoHandler = async () => {
     if (todoInput.trim().length === 0) {
       setError(true)
       return
     }
 
-    dispatch(
-      AddTodoItem({
-        id: Math.random().toString(),
+    if (fetchedTodo.length === 5) {
+      todoToast('You can enlist atmost 5 todo tasks.', ToastTypes.INFO)
+      setTodoInput('')
+      return
+    }
+
+    try {
+      const response = await addTodo({
         name: todoInput.trim(),
         isEditted: false,
-      })
-    )
+      }).unwrap()
 
-    todoToast('A new todo item have successfully added.')
+      if (response === null) {
+        todoToast('Failed to save the todo', ToastTypes.ERROR)
+      } else {
+        todoToast('A new todo item have successfully added.')
+      }
+    } catch (err) {
+      // console.error('Failed to save the todo', err)
+      todoToast('Failed to save the todo', ToastTypes.ERROR)
+    }
 
     setTodoInput('')
   }
@@ -70,10 +87,13 @@ const TodoForm = () => {
           <Button
             className='w-24'
             onClick={addTodoHandler}
-            // disabled
+            disabled={isLoading}
           >
-            Add Todo
-            {/* <Loader2 className='text-center h-6 w-6 animate-spin' /> */}
+            {isLoading ? (
+              <Loader2 className='text-center h-6 w-6 animate-spin' />
+            ) : (
+              'Add Todo'
+            )}
           </Button>
         </CardFooter>
       </Card>

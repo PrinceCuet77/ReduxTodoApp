@@ -1,28 +1,41 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 import Todo from './Todo'
-import { useAppSelector } from '@/store/hooks'
-import EmptyTodo from './EmptyContainer'
+import EmptyContainer from './EmptyContainer'
+import { Todo as TodoItem, useGetTodosQuery } from '@/store/todo-slice'
+import Loader from './Loader/Loader'
 
 const Todos = () => {
-  const todoItem = useAppSelector((state) => state.todo.todos)
+  const { data: todos, error, isLoading } = useGetTodosQuery()
 
-  if (todoItem.length !== 0) {
+  if (isLoading) {
+    return <Loader />
+  }
+
+  let fetchedTodo: TodoItem[] = []
+  for (let key in todos) {
+    fetchedTodo.unshift({ ...todos[key], id: key })
+  }
+
+  if (fetchedTodo.length !== 0) {
     return (
       <Card className='max-w-3xl border-blue-600'>
         <CardHeader className='text-center'>
           <CardTitle>Your Todo List</CardTitle>
         </CardHeader>
         <CardContent className='space-y-3'>
-          {todoItem.map((todo) => (
-            <Todo key={todo.id} {...todo} />
+          {fetchedTodo.map((todo) => (
+            <Todo
+              key={todo.id}
+              {...todo}
+            />
           ))}
         </CardContent>
       </Card>
     )
   }
 
-  return <EmptyTodo />
+  return <EmptyContainer error={error ? true : false} />
 }
 
 export default Todos
