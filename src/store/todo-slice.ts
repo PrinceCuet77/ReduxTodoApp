@@ -27,7 +27,7 @@ export const todoApi = createApi({
     updateTodo: builder.mutation<{ name: string; isEditted: boolean }, Todo>({
       query: ({ id, name, isEditted }) => {
         return {
-          url: `${config.DB}/${id}.jon`,
+          url: `${config.DB}/${id}.json`,
           method: 'PUT',
           body: { name, isEditted },
         }
