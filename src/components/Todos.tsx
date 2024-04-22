@@ -8,17 +8,9 @@ import Loader from './Loader/Loader'
 const Todos = () => {
   const { todos, isLoading, error } = useAppSelector((state) => state.todo)
 
-  // console.log(todos)
-
   if (isLoading === 'pending') {
     return <Loader />
   }
-
-  // if (isLoading === 'failed') {
-  //   // todoToast(fetchingError ?? 'Something went wrong', ToastTypes.ERROR)
-  //   // TODO: Need a error component to load while facing an error
-  //   return <p>Error----------------------------------</p>
-  // }
 
   if (todos.length !== 0) {
     return (

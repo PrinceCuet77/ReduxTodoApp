@@ -53,8 +53,6 @@ export const todoSlice = createSlice({
           ...action.payload.data,
         }
         state.todos.unshift(newTodo)
-
-        // state.todos.unshift(action.payload.todo)
       })
 
       .addCase(updateTodo.fulfilled, (state, action) => {

@@ -16,18 +16,17 @@ import { ToastTypes, todoToast } from '@/lib/utils'
 import { useAppDispatch } from '@/store/hooks'
 import { updateTodo } from '@/store/todo/todo-thunks'
 import { TodoItem } from '@/store/todo/todo-slice'
-// import { updateTodoItem } from '@/store/todo-slice'
 
-const EditModal = ({ id, name, isEditted }: TodoItem) => {
+const EditModal = ({ id, name }: TodoItem) => {
   const [editTodoInput, setEditTodoInput] = useState('')
 
   const dispatch = useAppDispatch()
 
   const hasError = editTodoInput.trim().length === 0
 
-  const updateTodoHandler = () => {
+  const updateTodoHandler = async () => {
     if (editTodoInput === name) {
-      todoToast('You have inputed the same input', ToastTypes.INFO)
+      todoToast('You have inputed the same input', ToastTypes.WARNING)
       return
     }
 
@@ -37,21 +36,20 @@ const EditModal = ({ id, name, isEditted }: TodoItem) => {
     }
 
     try {
-      dispatch(
+      await dispatch(
         updateTodo({
           id,
           name: editTodoInput,
           isEditted: true,
         })
       ).unwrap()
+
+      todoToast('A todo item have updated successfully.')
+      setEditTodoInput('')
     } catch (err) {
       console.error('Failed to update the todo', err)
       todoToast('Failed to update the todo', ToastTypes.ERROR)
     }
-
-    todoToast('A todo item have updated successfully.')
-
-    setEditTodoInput('')
   }
 
   return (
@@ -78,10 +76,7 @@ const EditModal = ({ id, name, isEditted }: TodoItem) => {
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button
-              type='submit'
-              onClick={updateTodoHandler}
-            >
+            <Button type='submit' onClick={updateTodoHandler}>
               Update Todo
             </Button>
           </DialogClose>

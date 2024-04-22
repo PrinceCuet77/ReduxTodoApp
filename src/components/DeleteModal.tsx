@@ -21,15 +21,14 @@ type DeleteModalProps = { id: string }
 const DeleteModal = ({ id }: DeleteModalProps) => {
   const dispatch = useAppDispatch()
 
-  const deleteHandler = () => {
+  const deleteHandler = async () => {
     try {
-      dispatch(deleteTodo(id)).unwrap()
+      await dispatch(deleteTodo(id)).unwrap()
+      todoToast('A todo item have successfully deleted.')
     } catch (err) {
       console.error('Failed to delete the todo', err)
       todoToast('Failed to delete the todo', ToastTypes.ERROR)
     }
-
-    todoToast('A todo item have successfully deleted.', ToastTypes.INFO)
   }
 
   return (
