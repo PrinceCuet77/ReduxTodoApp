@@ -37,7 +37,7 @@ export const todoSlice = createSlice({
         } else {
           let fetchedTodo: TodoItem[] = []
           for (let key in action.payload) {
-            fetchedTodo.push({ ...action.payload[key], id: key })
+            fetchedTodo.unshift({ ...action.payload[key], id: key })
           }
           state.todos = [...fetchedTodo]
         }

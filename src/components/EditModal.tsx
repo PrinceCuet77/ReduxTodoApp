@@ -25,8 +25,13 @@ const EditModal = ({ id, name }: TodoItem) => {
   const hasError = editTodoInput.trim().length === 0
 
   const updateTodoHandler = async () => {
-    if (editTodoInput === name) {
+    if (editTodoInput.trim() === name) {
       todoToast('You have inputed the same input', ToastTypes.WARNING)
+      return
+    }
+
+    if (editTodoInput.trim().length > 50) {
+      todoToast('Make sure task name within 50 letters.', ToastTypes.INFO)
       return
     }
 
@@ -39,7 +44,7 @@ const EditModal = ({ id, name }: TodoItem) => {
       await dispatch(
         updateTodo({
           id,
-          name: editTodoInput,
+          name: editTodoInput.trim(),
           isEditted: true,
         })
       ).unwrap()

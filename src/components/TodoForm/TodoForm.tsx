@@ -24,6 +24,12 @@ const TodoForm = () => {
       return
     }
 
+    if (todoInput.trim().length > 50) {
+      todoToast('Make sure task name within 50 letters.', ToastTypes.INFO)
+      setTodoInput('')
+      return
+    }
+
     if (todos.length === 5) {
       todoToast('You can enlist atmost 5 todo tasks.', ToastTypes.INFO)
       setTodoInput('')
@@ -46,7 +52,7 @@ const TodoForm = () => {
       console.error('Failed to save the todo', err)
       todoToast('Failed to save the todo', ToastTypes.ERROR)
     }
-    
+
     setTodoInput('')
     setIsLoading(false)
   }
@@ -78,7 +84,10 @@ const TodoForm = () => {
           </div>
         </CardContent>
         <CardFooter className='flex justify-end gap-3'>
-          <Button onClick={() => setTodoInput('')} variant='outline'>
+          <Button
+            onClick={() => setTodoInput('')}
+            variant='outline'
+          >
             Clear
           </Button>
           <Button
