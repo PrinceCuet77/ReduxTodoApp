@@ -22,7 +22,10 @@ export const todoApi = createApi({
         method: 'POST',
         body: { name, isEditted },
       }),
-      invalidatesTags: (result) => ['Todo', { type: 'Todo', id: result?.name }],
+      invalidatesTags: (result) => [
+        'Todo',
+        { type: 'Todo', name: result?.name },
+      ],
     }),
     updateTodo: builder.mutation<{ name: string; isEditted: boolean }, Todo>({
       query: ({ id, name, isEditted }) => {
@@ -32,7 +35,10 @@ export const todoApi = createApi({
           body: { name, isEditted },
         }
       },
-      invalidatesTags: (result) => ['Todo', { type: 'Todo', id: result?.name }],
+      invalidatesTags: (result) => [
+        'Todo',
+        { type: 'Todo', name: result?.name },
+      ],
     }),
     deleteTodo: builder.mutation<{ name: string; isEditted: boolean }, string>({
       query(id) {
@@ -41,7 +47,10 @@ export const todoApi = createApi({
           method: 'DELETE',
         }
       },
-      invalidatesTags: (result) => ['Todo', { type: 'Todo', id: result?.name }],
+      invalidatesTags: (result) => [
+        'Todo',
+        { type: 'Todo', name: result?.name },
+      ],
     }),
   }),
 })
