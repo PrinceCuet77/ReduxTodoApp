@@ -6,7 +6,7 @@ Redux Todo App
 
 ![Redux Todo App Preview](photo/0.Preview.png)
 
-I have created a [Redux Todo App]() where I use a React Application align with Redux Toolkit. It's a REST API application where user can fetch the existing remaining todo task (`GET` operation), enter any todo task (`POST` operation) update the existing todo task (`PUT` operation) & delete any todo task (`DELETE` operation)
+I have created a [Redux Todo App](https://redux-toolkit-todoapp.netlify.app/) where I use a React Application align with Redux Toolkit. It's a REST API application where user can fetch the existing remaining todo task (`GET` operation), enter any todo task (`POST` operation) update the existing todo task (`PUT` operation) & delete any todo task (`DELETE` operation)
 
 ## Tech Stack
 
@@ -93,7 +93,7 @@ fter successful deletion, user can view a success toast message.
 
 I have deployed my project in Netlify website. Visit & investigate the application using the following hosted link.
 
-[ReduxTodo App]()
+[ReduxTodo App](https://redux-toolkit-todoapp.netlify.app/)
 
 ## Lessons Learned
 
@@ -135,7 +135,7 @@ Start the server
   npm run start
 ```
 
-## Authors
+## Author
 
 - Github: [PrinceCuet77](https://github.com/PrinceCuet77)
 - Email: [prince.cuet.77@gmail.com](mailto:prince.cuet.77@gmail.com)
