@@ -8,6 +8,12 @@ Redux Todo App
 
 I have created a [Redux Todo App](https://redux-toolkit-todoapp.netlify.app/) where I use a React Application align with Redux Toolkit. It's a REST API application where user can fetch the existing remaining todo task (`GET` operation), enter any todo task (`POST` operation) update the existing todo task (`PUT` operation) & delete any todo task (`DELETE` operation)
 
+## Branch Details
+
+- `redux-basic`: Redux Toolkit
+- `redux-thunk`: Redux Toolkit with async thunk
+- `redux-rtk-query`: Redux Toolkit with RTK Query
+
 ## Tech Stack
 
 **Client:**
@@ -97,9 +103,16 @@ I have deployed my project in Netlify website. Visit & investigate the applicati
 
 ## Lessons Learned
 
-What did you learn while building this project? What challenges did you face and how did you overcome them?
+- Redux Toolkit
+- Redux Toolkit for data fetching with Async Thunk
+- Redux Toolkit for data fetching with RTK Query
+- Tailwind CSS with Shadcn UI
 
-- Will disclose later
+## Challenges
+
+- Need to manage App-wide state management, use Redux Toolkit
+- Need to fetch data from firebase, use Redux Toolkit with Async Thunk
+- Need to cache fetched data with high performance, use Redux Toolkit with RTK Query
 
 ## Environment Variables
 
